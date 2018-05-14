@@ -4,6 +4,11 @@
 #include <algorithm>
 
 
+/* https://en.wikipedia.org/wiki/Closest_pair_of_points_problem
+ * http://judge.u-aizu.ac.jp/onlinejudge/description.jsp?id=0585
+ * test of c++
+ */
+
 template <typename T>
 class Region {
     private:
@@ -34,13 +39,21 @@ class Region {
             T d_min_lr =  std::min(d_min, dist_r);
             
             T d_inter = __INT_MAX__;
-            // TODO: main algorithm, accessing O(1)
+
+            T left_boundary = -__INT_MAX__;
             for (auto point_l: this->points) {
-                for (auto point_r: points_r) {
-                    // in the rectangular
-                    if ((point_l.real() - point_r.real()) > d_min_lr) {
-                        continue;
-                    } else if(std::abs(point_l.imag() - point_r.imag()) > d_min_lr) {
+                left_boundary = std::max(left_boundary, point_l.real());
+            }
+
+            // TODO: main algorithm, accessing O(1)
+            for (auto point_r: points_r) {
+                // out of the rectangular (in real value)
+                if ((point_r.real() - left_boundary) > d_min_lr) {
+                    continue;
+                }
+
+                for (auto point_l: this->points) {
+                    if(std::abs(point_l.imag() - point_r.imag()) > d_min_lr) {
                         continue;
                     }
                     else {
@@ -128,11 +141,11 @@ int find_smart(std::vector<std::complex<int>> points) {
 // merge n/ 
 
 int find_naive(std::vector<std::complex<int>> points) {
-    float ans = __INT_MAX__;
+    int ans = __INT_MAX__;
     size_t arr_size = points.size();
     for (size_t i = 0; i < arr_size; i++) {
         for (size_t j = i + 1; j < arr_size; j++) {
-            float dist2 = std::norm(points.at(j) - points.at(i));
+            int dist2 = std::norm(points.at(j) - points.at(i));
             if (dist2 < ans) {
                 ans = dist2;
             }
@@ -144,9 +157,9 @@ int find_naive(std::vector<std::complex<int>> points) {
 
 int main(int argc, char const *argv[]) {
     std::vector<std::complex<int>> input_vec = read_input<int>();
-    // float ans_n = find_naive(input_vec);
+    // int ans_n = find_naive(input_vec);
     // std::cout << "naive: " << ans_n << std::endl;
-    float ans_s = find_smart(input_vec);
+    int ans_s = find_smart(input_vec);
     std::cout << ans_s << std::endl;
     return 0;
 }
