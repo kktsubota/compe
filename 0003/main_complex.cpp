@@ -1,6 +1,7 @@
 #include <iostream>
 #include <complex>
 #include <vector>
+#include <unordered_map> 
 #include <algorithm>
 
 
@@ -40,46 +41,46 @@ class Region {
             
             T d_inter = __INT_MAX__;
 
-            T left_boundary = -__INT_MAX__;
-            for (auto point_l: this->points) {
-                left_boundary = std::max(left_boundary, point_l.real());
-            }
-
-            // TODO: main algorithm, accessing O(1)
-            for (auto point_r: points_r) {
-                // out of the rectangular (in real value)
-                if ((point_r.real() - left_boundary) > d_min_lr) {
-                    continue;
+            // this is to avoid zero division.
+            if (d_min_lr != 0) {
+                T left_boundary = -__INT_MAX__;
+                for (auto point_l: this->points) {
+                    left_boundary = std::max(left_boundary, point_l.real());
                 }
 
-                for (auto point_l: this->points) {
-                    if(std::abs(point_l.imag() - point_r.imag()) > d_min_lr) {
+                // divide right points to blocks following the wiki.
+                // key works as a hash.
+                std::unordered_map<int, std::vector<std::complex<int>>> blocks;
+                for (auto point_r: points_r) {
+                    if ((point_r.real() - left_boundary) > d_min_lr) {
                         continue;
                     }
-                    else {
-                        // calc dist
-                        d_inter = std::min(d_inter, std::norm(point_l - point_r));
+                    int key = point_r.imag() / d_min_lr;
+                    blocks[key].push_back(point_r);
+                }
+
+                // main loop
+                for (auto point_l: this->points) {
+                    int key = point_l.imag() / d_min_lr;
+
+                    // up and down of right blocks
+                    for (int i = key - 1; i < key + 2; i++) {
+                        std::vector<std::complex<int>> points_r_blk = blocks[i];
+                        for (auto point_r: points_r_blk) {
+                            d_inter = std::min(d_inter, std::norm(point_l - point_r));
+                        }
                     }
                 }
             }
-
-            // naive O(n), L2 is O(6)
-
-            // T imag_max = __FLT_MAX__;
-            // T imag_min = __FLT_MIN__;
-            // for (auto point in this->points) {
-            //     imag_max = std::max(imag_max, point.imag());
-            //     imag_min = std::min(imag_min, point.imag());                
-            // }
-            // // search rect in [imag_min - d_min_lr, imag_max + d_min_lr]
-            // imag_max - imag_min
 
             // operator+ destructs myself
             this->d_min = std::min(d_min_lr, d_inter);
             this->points.insert(this->points.end(), points_r.begin(), points_r.end());
+
             return *this;
         }
 };
+
 
 template <typename T>
 std::vector<std::complex<T>> read_input() {
@@ -116,6 +117,7 @@ std::vector<Region<int>> sort_and_divide(std::vector<std::complex<int>> points) 
     return regions;
 }
 
+
 int find_smart(std::vector<std::complex<int>> points) {
     std::vector<Region<int>> regions = sort_and_divide(points);
 
@@ -135,10 +137,7 @@ int find_smart(std::vector<std::complex<int>> points) {
     }
     return regions.at(0).getDist();
 }
-// sort n logn
-// divided region n/2 x O(1) = O(n/2)
-// merge n * O(6)
-// merge n/ 
+
 
 int find_naive(std::vector<std::complex<int>> points) {
     int ans = __INT_MAX__;
