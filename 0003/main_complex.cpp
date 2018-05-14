@@ -33,7 +33,7 @@ class Region {
 
             T d_min_lr =  std::min(d_min, dist_r);
             
-            T d_inter = __FLT_MAX__;
+            T d_inter = __INT_MAX__;
             // TODO: main algorithm, accessing O(1)
             for (auto point_l: this->points) {
                 for (auto point_r: points_r) {
@@ -88,29 +88,29 @@ std::vector<std::complex<T>> read_input() {
 }
 
 
-std::vector<Region<float>> sort_and_divide(std::vector<std::complex<float>> points) {
-    std::vector<Region<float>> regions(points.size());
+std::vector<Region<int>> sort_and_divide(std::vector<std::complex<int>> points) {
+    std::vector<Region<int>> regions(points.size());
 
     // sort by real value
-    std::sort(points.begin(), points.end(), [](std::complex<float>& p1, std::complex<float>& p2) {return p1.real() < p2.real();});
+    std::sort(points.begin(), points.end(), [](std::complex<int>& p1, std::complex<int>& p2) {return p1.real() < p2.real();});
 
     // divide
     for (size_t i = 0; i < points.size(); i++) {
-        std::vector<std::complex<float>> point({points.at(i)});
+        std::vector<std::complex<int>> point({points.at(i)});
         regions.at(i).setPoint(point);
-        regions.at(i).setDist(__FLT_MAX__);
+        regions.at(i).setDist(__INT_MAX__);
     }
     return regions;
 }
 
-float find_smart(std::vector<std::complex<float>> points) {
-    std::vector<Region<float>> regions = sort_and_divide(points);
+int find_smart(std::vector<std::complex<int>> points) {
+    std::vector<Region<int>> regions = sort_and_divide(points);
 
     while (regions.size() != 1) {
-        std::vector<Region<float>> regions_merged;
+        std::vector<Region<int>> regions_merged;
         for (size_t i = 0; i < regions.size(); i++) {
             if (i % 2 == 1) {
-                Region<float> region = regions.at(i-1) + regions.at(i);
+                Region<int> region = regions.at(i-1) + regions.at(i);
                 regions_merged.push_back(region);
             }
         }
@@ -127,8 +127,8 @@ float find_smart(std::vector<std::complex<float>> points) {
 // merge n * O(6)
 // merge n/ 
 
-float find_naive(std::vector<std::complex<float>> points) {
-    float ans = __FLT_MAX__;
+int find_naive(std::vector<std::complex<int>> points) {
+    float ans = __INT_MAX__;
     size_t arr_size = points.size();
     for (size_t i = 0; i < arr_size; i++) {
         for (size_t j = i + 1; j < arr_size; j++) {
@@ -143,10 +143,10 @@ float find_naive(std::vector<std::complex<float>> points) {
 
 
 int main(int argc, char const *argv[]) {
-    std::vector<std::complex<float>> input_vec = read_input<float>();
+    std::vector<std::complex<int>> input_vec = read_input<int>();
     // float ans_n = find_naive(input_vec);
     // std::cout << "naive: " << ans_n << std::endl;
     float ans_s = find_smart(input_vec);
-    std::cout << "smart: " << ans_s << std::endl;
+    std::cout << ans_s << std::endl;
     return 0;
 }
