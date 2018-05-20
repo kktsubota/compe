@@ -1,5 +1,8 @@
-# MEMO
-## profiling
+# Programming Competition
+- AOJ http://judge.u-aizu.ac.jp/onlinejudge/
+
+## MEMO
+### profiling
 http://minus9d.hatenablog.com/entry/20140112/1389502918
 
 ```bash
@@ -8,7 +11,7 @@ $ ./a.out
 $ gprof a.out gmon.out | less
 ```
 
-## build
+### build
 
 ```bash
 $ mkdir build
