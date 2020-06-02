@@ -1,0 +1,34 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: prepare googletest
+      run: |
+        cd third_party/googletest
+        mkdir build/
+        cd build/
+        cmake ..
+        make
+        sudo make install        
+    - name: make
+      run: |
+        mkdir build/
+        cd build/
+        cmake ..
+        make
+    - name: test
+      run: |
+        for test in $(find "build/" -maxdepth 1 -executable -type f); do $test; done;
