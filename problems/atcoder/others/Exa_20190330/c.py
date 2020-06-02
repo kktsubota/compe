@@ -15,5 +15,5 @@ cache[:, 1:N+1] = 1
 cache[:, 0] = 0
 cache[:, N+1] = 1
 
-def func(q, n, d):
-    
+# def func(q, n, d):
+

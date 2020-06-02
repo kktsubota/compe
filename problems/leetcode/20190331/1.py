@@ -11,7 +11,7 @@ for i in range(len(A)):
     # binary = ''.join(map(str, A[0:i+1]))
     # ans.append(int(binary, 2) % 5)
 
-return answers
+print(answers)
 
 #     ans.append(bin_list_to_int5(A[0:i+1]) % 5)
 

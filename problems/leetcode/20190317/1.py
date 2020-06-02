@@ -1,3 +1,9 @@
+import itertools
+from typing import List
+
+import numpy
+
+
 class Solution:
     def numPairsDivisibleBy60(self, time: List[int]) -> int:
         ans = 0
