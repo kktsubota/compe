@@ -55,7 +55,7 @@ def main(exp):
                 continue            
             tree.left += s
             if s == ',':
-            tree.right += s
+                tree.right += s
             if s == ')':
                 break
 

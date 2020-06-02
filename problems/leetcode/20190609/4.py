@@ -35,5 +35,5 @@ class Solution:
 
 # s = 'accaccbbcc'
 # s = 'bdfecedcbfcfeaaffdbaeeabadbbbddddcafdfeeeebfcdabcfaadecddccdefcabedbebbdcbdfefeffcbbeaefaeefeeceadea'
-# s = "edgebcbddfhafbcafbggbaadchcehhdaagfadedchbgbeadbde"
+s = "edgebcbddfhafbcafbggbaadchcehhdaagfadedchbgbeadbde"
 print(Solution().smallestSubsequence(s))
