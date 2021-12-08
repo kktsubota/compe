@@ -1,0 +1,15 @@
+s, t, x = map(int, input().split())
+
+if s < t:
+    if s <= x < t:
+        print("Yes")
+    else:
+        print("No")
+
+# s > t
+else:
+    if s <= x or x < t:
+        print("Yes")
+    else:
+        print("No")
+    
